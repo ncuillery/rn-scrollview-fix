@@ -16,6 +16,25 @@ import {
 } from 'react-native';
 
 class ScrollViewFix extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      messages: ['Scroll to start']
+    }
+  }
+
+  handleMomentumScrollBegin() {
+    console.log('BEGIN');
+    this.setState({messages : [...this.state.messages, 'BEGIN']});
+  }
+
+  handleMomentumScrollEnd() {
+    console.log('END');
+    this.setState({messages : [...this.state.messages, 'END']});
+  }
+
   render() {
     return (
       <View>
@@ -24,17 +43,20 @@ class ScrollViewFix extends Component {
           automaticallyAdjustContentInsets={false}
           onScroll={() => { console.log('onScroll!'); }}
           scrollEventThrottle={200}
-          style={styles.scrollView}>
+          style={styles.scrollView}
+          onMomentumScrollBegin={this.handleMomentumScrollBegin.bind(this)}
+          onMomentumScrollEnd={this.handleMomentumScrollEnd.bind(this)}>
           {THUMBS.map(createThumbRow)}
         </ScrollView>
         <TouchableOpacity
           style={styles.button}
           onPress={() => { _scrollView.scrollTo({y: 0}); }}>
-          <Text>Scroll to top</Text>
+          {this.state.messages.map((message, n) => <Text key={n}>{message}</Text>)}
         </TouchableOpacity>
       </View>
     );
   }
+
 }
 
 var Thumb = React.createClass({
